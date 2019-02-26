@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Android Challenge</string>
+    <string name="login">LOGIN</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="fargo_events_app">Fargo Events App</string>
 </resources>
