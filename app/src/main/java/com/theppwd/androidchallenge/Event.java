@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +33,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Event extends AppCompatActivity {
 
+    // Base URL for the api call (1 line)
     final private String BASE_URL = "https://challenge.myriadapps.com";
 
     private Retrofit retrofit= new Retrofit.Builder()
@@ -51,9 +51,15 @@ public class Event extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Clear the token from local storage (1 line)
         getSharedPreferences("token", Context.MODE_PRIVATE).edit().remove("token").apply();
+
+        // Start the login activity (1 line)
         startActivity(new Intent(Event.this, Login.class));
+
+        // Notify a successful logout (1 line)
         Toast.makeText(this, "Logout Succeeded.", Toast.LENGTH_SHORT).show();
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -62,86 +68,94 @@ public class Event extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
-        final Toolbar toolbar;
+        // Variable declaration for future use (11 lines)
+        final Toolbar TOOLBAR;
 
-        final ImageView image = (ImageView) findViewById(R.id.event_image);
-        final TextView header = (TextView) findViewById(R.id.event_header);
-        final TextView dateTime = (TextView) findViewById(R.id.event_date_time);
-        final TextView description = (TextView) findViewById(R.id.event_description);
-        final TextView location = (TextView) findViewById(R.id.event_location);
+        final ImageView IMAGE = (ImageView) findViewById(R.id.event_image);
+        final TextView HEADER = (TextView) findViewById(R.id.event_header);
+        final TextView DATE_TIME = (TextView) findViewById(R.id.event_date_time);
+        final TextView DESCRIPTION = (TextView) findViewById(R.id.event_description);
+        final TextView LOCATION = (TextView) findViewById(R.id.event_location);
 
-        final SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
-        final SimpleDateFormat newFormat = new SimpleDateFormat("M/d/yy h:mm a", Locale.US);
-        final SimpleDateFormat hourFormat = new SimpleDateFormat("h:mm a", Locale.US);
+        final SimpleDateFormat OLD_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+        final SimpleDateFormat NEW_FORMAT = new SimpleDateFormat("M/d/yy h:mm a", Locale.US);
+        final SimpleDateFormat HOUR_FORMAT = new SimpleDateFormat("h:mm a", Locale.US);
 
-        toolbar = (Toolbar) findViewById(R.id.event_toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        TOOLBAR = (Toolbar) findViewById(R.id.event_toolbar);
+        setSupportActionBar(TOOLBAR);
+        TOOLBAR.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        TOOLBAR.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Event.this, Events.class));
             }
         });
 
-        location.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_place_24dp, 0, 0, 0);
-
+        // Retrieve arguments passed by Events (1 line)
         Bundle bundle = getIntent().getExtras();
 
-        // Handle exception
-        retrofitInterface.getJsonObject(BASE_URL + "/api/v1/events/" + bundle.getString("id"), getSharedPreferences("token", Context.MODE_PRIVATE).getString("token", null)).enqueue(new Callback<JsonObject>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                if (response.body() != null) {
+        // A bundle argument is needed for the api call; this prevents a NullPointerException (1 line)
+        if (bundle != null) {
+            // The api call (49 line)
+            retrofitInterface.getJsonObject(BASE_URL + "/api/v1/events/" + bundle.getString("id"), getSharedPreferences("token", Context.MODE_PRIVATE).getString("token", null)).enqueue(new Callback<JsonObject>() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                    // If the server replied with contents in the body (1 line)
+                    if (response.body() != null) {
 
-                    toolbar.setTitle(response.body().get("title").toString().substring(1, response.body().get("title").toString().length() - 1));
+                        // Visibility is by default set to INVISIBLE so that, if there is no internet connection, an empty activity is displayed instead of partial views (2 lines)
+                        ((View) findViewById(R.id.divider)).setVisibility(View.VISIBLE);
+                        ((TextView) findViewById(R.id.speakers)).setVisibility(View.VISIBLE);
 
-                    Picasso.with(Event.this).load(response.body().get("image_url").toString().substring(1, response.body().get("image_url").toString().length() - 1)).fit().into(image);
+                        TOOLBAR.setTitle(response.body().get("title").toString().substring(1, response.body().get("title").toString().length() - 1));
 
-                    header.setText(response.body().get("title").toString().substring(1, response.body().getAsJsonObject().get("title").toString().length() -1));
+                        // Load main image (1 line)
+                        Picasso.with(Event.this).load(response.body().get("image_url").toString().substring(1, response.body().get("image_url").toString().length() - 1)).fit().into(IMAGE);
 
-                    description.setText(response.body().get("event_description").toString().substring(1, response.body().getAsJsonObject().get("event_description").toString().length() -1));
+                        HEADER.setText(response.body().get("title").toString().substring(1, response.body().getAsJsonObject().get("title").toString().length() -1));
 
-                    location.setText("\t" + response.body().get("location").toString().substring(1, response.body().getAsJsonObject().get("location").toString().length() -1));
+                        DESCRIPTION.setText(response.body().get("event_description").toString().substring(1, response.body().getAsJsonObject().get("event_description").toString().length() -1));
 
-                    try {
-                        dateTime.setText(newFormat.format(oldFormat.parse(response.body().get("start_date_time").toString().substring(1, response.body().get("start_date_time").toString().length() - 7))) + " - " + hourFormat.format(oldFormat.parse(response.body().get("end_date_time").toString().substring(1, response.body().get("end_date_time").toString().length() - 7))));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                        // Adds the location vector (1 line)
+                        LOCATION.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_place_24dp, 0, 0, 0);
+                        LOCATION.setText("\t" + response.body().get("location").toString().substring(1, response.body().getAsJsonObject().get("location").toString().length() -1));
+
+                        try {
+                            // Formats the date range (1 line)
+                            DATE_TIME.setText(NEW_FORMAT.format(OLD_FORMAT.parse(response.body().get("start_date_time").toString().substring(1, response.body().get("start_date_time").toString().length() - 7))) + " - " + HOUR_FORMAT.format(OLD_FORMAT.parse(response.body().get("end_date_time").toString().substring(1, response.body().get("end_date_time").toString().length() - 7))));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        // Adds a speaker fragment for every speaker (12 lines)
+                        for (int lcv = 0; lcv <= response.body().get("speakers").getAsJsonArray().size() - 1; lcv++) {
+                            String id = response.body().get("speakers").getAsJsonArray().get(lcv).getAsJsonObject().get("id").toString();
+
+                            Bundle fragmentBundle = new Bundle();
+                            fragmentBundle.putString("id", id);
+
+                            SpeakerFragment speakerFragment = new SpeakerFragment();
+                            speakerFragment.setArguments(fragmentBundle);
+
+                            FragmentManager fragmentManager = getFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.add(R.id.activity_event, speakerFragment).commit();
+                        }
+
+                    } else {
+                        onFailure(call, new Throwable());
                     }
-
-                    for (int lcv = 0; lcv <= response.body().get("speakers").getAsJsonArray().size() - 1; lcv++) {
-                        String id = response.body().get("speakers").getAsJsonArray().get(lcv).getAsJsonObject().get("id").toString();
-
-                        Bundle fragmentBundle = new Bundle();
-                        fragmentBundle.putString("id", id);
-
-                        SpeakerFragment speakerFragment = new SpeakerFragment();
-                        speakerFragment.setArguments(fragmentBundle);
-
-                        FragmentManager fragmentManager = getFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.add(R.id.activity_event, speakerFragment).commit();
-                    }
-
-                } else {
-                    onFailure(call, new Throwable());
                 }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                Toast.makeText(Event.super.getBaseContext(), "Retrieve failed.", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+                    Toast.makeText(Event.super.getBaseContext(), "Retrieve failed.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(Event.super.getBaseContext(), "Retrieve failed.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
-
-/*
-
-//fragmentTransaction.add(R.id.activity_event, (Fragment) speakerFragment).commit();
-
-//imageUrls.add(response.body().get("image_url").toString().substring(1, response.body().get("image_url").toString().length() - 1));
-
-*/

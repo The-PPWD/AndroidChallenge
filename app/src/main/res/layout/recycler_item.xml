@@ -27,15 +27,12 @@
             android:id="@+id/recycler_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:background="@color/white" />
+            android:textSize="18sp"
+            android:textColor="@color/black" />
         <TextView
             android:id="@+id/recycler_body"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

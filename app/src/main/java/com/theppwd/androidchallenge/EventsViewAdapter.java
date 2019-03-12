@@ -1,5 +1,6 @@
 package com.theppwd.androidchallenge;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 public class EventsViewAdapter extends RecyclerView.Adapter<EventsViewAdapter.ViewHolder> {
 
+    // Variable declarations used in the constructor (2 lines)
     private Context context;
     private ArrayList<String> ids, headers, startDateTimes, endDateTimes, imageUrls;
 
@@ -35,16 +37,19 @@ public class EventsViewAdapter extends RecyclerView.Adapter<EventsViewAdapter.Vi
         return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_item, viewGroup, false));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         viewHolder.recyclerHeader.setText(headers.get(i));
         viewHolder.recyclerBody.setText(startDateTimes.get(i) + " - " + endDateTimes.get(i));
 
+        // Loads image (1 line)
         Picasso.with(context).load(imageUrls.get(i)).into(viewHolder.recyclerImage);
 
         viewHolder.recyclerItem.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
+               // Crafts and starts the individual event page for which recycler view was clicked (3 lines)
                Intent intent = new Intent(context, Event.class);
                intent.putExtra("id", ids.get(i));
                context.startActivity(intent);

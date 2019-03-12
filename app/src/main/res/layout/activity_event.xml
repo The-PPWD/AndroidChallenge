@@ -30,7 +30,7 @@
         <ImageView
             android:id="@+id/event_image"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
+            android:layout_height="200dp" />
         <TextView
             android:id="@+id/event_header"
             android:layout_width="wrap_content"
@@ -38,8 +38,8 @@
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp"
-            android:textSize="23sp"
+            android:layout_marginBottom="2dp"
+            android:textSize="24sp"
             android:textColor="@color/black" />
         <TextView
             android:id="@+id/event_date_time"
@@ -54,15 +54,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginTop="8dp" />
         <TextView
             android:id="@+id/event_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryLight"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:layout_marginTop="4dp"
@@ -71,6 +71,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:visibility="invisible"
             android:background="?android:attr/listDivider" />
         <TextView
             android:id="@+id/speakers"
@@ -80,6 +81,7 @@
             android:layout_marginRight="32dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:visibility="invisible"
             android:text="@string/speakers" />
 
     </LinearLayout>
