@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Android Challenge</string>
     <string name="login">LOGIN</string>
     <string name="password">Password</string>
@@ -7,4 +8,6 @@
     <string name="fargo_events_app">Fargo Events App</string>
     <string name="events">Events</string>
     <string name="logout">Logout</string>
+    <string name="speakers">Speakers</string>
+
 </resources>

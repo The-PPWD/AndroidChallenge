@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="actionOverflowButtonStyle">@style/overflowButtonStyle</item>
+
+    </style>
+    <style name="overflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+
+        <item name="android:tint">@color/white</item>
+
     </style>
 
-    <style name="overflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:tint">@color/white</item>
-    </style>
 </resources>

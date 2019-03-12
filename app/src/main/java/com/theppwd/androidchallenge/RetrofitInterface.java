@@ -18,6 +18,9 @@ public interface RetrofitInterface {
     Call<JsonObject> authenticate(@Field("Username") String username, @Field("Password") String password);
 
     @GET
-    Call<JsonArray> retrieveEvents(@Url String url, @Header("authorization") String token);
+    Call<JsonArray> getJsonArray(@Url String url, @Header("authorization") String token);
+
+    @GET
+    Call<JsonObject> getJsonObject(@Url String url, @Header("authorization") String token);
 
 }

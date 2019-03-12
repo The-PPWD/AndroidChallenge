@@ -8,6 +8,8 @@
     android:id="@+id/recycler_item"
     android:background="@color/white" >
 
+    <!-- Look into contentDescription -->
+
     <ImageView
         android:layout_width="75dp"
         android:layout_height="75dp"
@@ -29,7 +31,6 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:background="@color/white" />
-
         <TextView
             android:id="@+id/recycler_body"
             android:layout_width="wrap_content"
